@@ -2,46 +2,52 @@ package com.example.currencyconverter;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.CompoundButton;
+import android.view.MenuItem;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 
 public class SettingsActivity extends AppCompatActivity {
 
     Switch switchDarkMode;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // Setup toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Settings");
+        }
+
         switchDarkMode = findViewById(R.id.switchDarkMode);
+        prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
 
-        // SharedPreferences = small key-value storage, survives app restarts
-        // Like a tiny database for settings
-        SharedPreferences prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
-        boolean isDarkMode = prefs.getBoolean("dark_mode", false);
+        boolean isDark = prefs.getBoolean("dark_mode", false);
+        switchDarkMode.setChecked(isDark);
 
-        // Set switch to match saved preference
-        switchDarkMode.setChecked(isDarkMode);
-
-        switchDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                // Save the new preference
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("dark_mode", isChecked);
-                editor.apply();
-
-                // Apply theme immediately
-                if (isChecked) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
+        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("dark_mode", isChecked).apply();
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

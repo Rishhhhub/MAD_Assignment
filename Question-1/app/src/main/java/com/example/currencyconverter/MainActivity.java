@@ -1,5 +1,6 @@
 package com.example.currencyconverter;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText etAmount;
     Spinner spinnerFrom, spinnerTo;
-    Button btnConvert, btnSwap, btnTheme;
+    Button btnConvert, btnSwap, btnSettings;
     TextView tvResult, tvRate;
 
     String[] currencies = {"INR", "USD", "JPY", "EUR"};
@@ -26,8 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        // Apply theme BEFORE super.onCreate
+        // Apply saved theme BEFORE super.onCreate
         prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("dark_mode", false);
         if (isDark) {
@@ -36,16 +39,13 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
         // Link views
         etAmount = findViewById(R.id.etAmount);
         spinnerFrom = findViewById(R.id.spinnerFrom);
         spinnerTo = findViewById(R.id.spinnerTo);
         btnConvert = findViewById(R.id.btnConvert);
         btnSwap = findViewById(R.id.btnSwap);
-        btnTheme = findViewById(R.id.btnTheme);
+        btnSettings = findViewById(R.id.btnSettings);
         tvResult = findViewById(R.id.tvResult);
         tvRate = findViewById(R.id.tvRate);
 
@@ -61,13 +61,9 @@ public class MainActivity extends AppCompatActivity {
         spinnerFrom.setSelection(1); // USD
         spinnerTo.setSelection(0);   // INR
 
-        // Update moon/sun icon based on current theme
-        btnTheme.setText(isDark ? "☀️" : "🌙");
-
-        // Convert
+        // Buttons
         btnConvert.setOnClickListener(v -> convertCurrency());
 
-        // Swap
         btnSwap.setOnClickListener(v -> {
             int from = spinnerFrom.getSelectedItemPosition();
             int to = spinnerTo.getSelectedItemPosition();
@@ -75,8 +71,11 @@ public class MainActivity extends AppCompatActivity {
             spinnerTo.setSelection(from);
         });
 
-        // Theme toggle
-        btnTheme.setOnClickListener(v -> toggleTheme());
+        // Opens Settings page
+        btnSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void convertCurrency() {
@@ -95,22 +94,18 @@ public class MainActivity extends AppCompatActivity {
 
         tvResult.setText(String.format("%.2f", result));
 
-        // Show rate hint like "USD 1 = INR 83.50"
         double rate = ratesInINR[fromIndex] / ratesInINR[toIndex];
-        tvRate.setText(currencies[fromIndex] + " 1 = " + currencies[toIndex] + " " +
-                String.format("%.2f", rate));
+        tvRate.setText(currencies[fromIndex] + " 1 = " + currencies[toIndex] + " " + String.format("%.2f", rate));
     }
-
-    private void toggleTheme() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // When returning from Settings, recreate if theme changed
         boolean isDark = prefs.getBoolean("dark_mode", false);
-        boolean newMode = !isDark;
-
-        prefs.edit().putBoolean("dark_mode", newMode).apply();
-        AppCompatDelegate.setDefaultNightMode(
-                newMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
-        );
-
-        // Recreate so UI refreshes with new theme
-        recreate();
+        boolean currentlyDark = (AppCompatDelegate.getDefaultNightMode()
+                == AppCompatDelegate.MODE_NIGHT_YES);
+        if (isDark != currentlyDark) {
+            recreate();
+        }
     }
 }
