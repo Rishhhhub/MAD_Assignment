@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- external-path covers the full SD card / public storage -->
+    <external-path name="external_files" path="." />
+    <!-- external-cache-path covers app-specific external cache -->
+    <external-cache-path name="camera_photos" path="." />
+</paths>
