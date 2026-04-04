@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import java.util.List;
 import java.util.ArrayList;
+import androidx.documentfile.provider.DocumentFile;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -37,30 +38,11 @@ public class MainActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Uri treeUri = result.getData().getData();
 
-                    // Convert the content URI to a real file path
-                    String path = getRealPathFromUri(treeUri);
-
-                    if (path != null) {
-                        // Check how many images are in this folder
-                        File folder = new File(path);
-                        File[] images = folder.listFiles((dir, name) -> {
-                            String lower = name.toLowerCase();
-                            return lower.endsWith(".jpg") || lower.endsWith(".jpeg")
-                                    || lower.endsWith(".png") || lower.endsWith(".webp");
-                        });
-
-                        int count = (images == null) ? 0 : images.length;
-                        Toast.makeText(this,
-                                folder.getName() + ": " + count + " images found",
-                                Toast.LENGTH_SHORT).show();
-
+                    if (treeUri != null) {
+                        // Pass the URI string directly — no path conversion needed
                         Intent intent = new Intent(this, GalleryActivity.class);
-                        intent.putExtra("folder_path", path);
+                        intent.putExtra("folder_uri", treeUri.toString());
                         startActivity(intent);
-                    } else {
-                        Toast.makeText(this,
-                                "Could not read this folder. Try a different one.",
-                                Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -163,78 +145,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ── FOLDER PICKER ──────────────────────────────────────────────────────
-
     private void openFolderPicker() {
-        // Build actual paths and check which ones exist
-        File baseDir = Environment.getExternalStorageDirectory();
+        // Use Android's built-in folder picker - works on all Android versions
+        // No permission issues since the user picks the folder themselves
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        folderPickerLauncher.launch(intent);
+    }
 
-        // Define all candidate folders with their real paths
-        String[] folderNames = {
-                "DCIM/Camera",
-                "Pictures",
-                "Downloads",
-                "DCIM",
-                "Documents"
-        };
+    private String getRealPathFromUri(Uri uri) {
+        try {
+            // Extract path from the document tree URI
+            String docId = androidx.documentfile.provider.DocumentFile
+                    .fromTreeUri(this, uri)
+                    .getUri()
+                    .getPath();
 
-        // Only show folders that actually exist on this device
-        List<String> existingNames = new ArrayList<>();
-        List<File> existingPaths = new ArrayList<>();
-
-        for (String name : folderNames) {
-            File f = new File(baseDir, name);
-            if (f.exists() && f.isDirectory()) {
-                existingNames.add(name);
-                existingPaths.add(f);
+            // The URI path looks like: /tree/primary:DCIM/Camera
+            // We need to convert it to: /storage/emulated/0/DCIM/Camera
+            if (docId != null && docId.contains(":")) {
+                String[] split = docId.split(":");
+                // split[1] is the relative path e.g. "DCIM/Camera"
+                if (split.length > 1) {
+                    String relativePath = split[1];
+                    return Environment.getExternalStorageDirectory()
+                            .getAbsolutePath() + "/" + relativePath;
+                }
             }
+
+            // Fallback: return root storage
+            return Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-        // Also check standard Android paths directly
-        File[] standardDirs = {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        };
-        String[] standardNames = {"DCIM", "Pictures", "Downloads", "Documents"};
-
-        for (int i = 0; i < standardDirs.length; i++) {
-            // Avoid duplicates
-            if (standardDirs[i].exists() && !existingPaths.contains(standardDirs[i])) {
-                existingNames.add(standardNames[i]);
-                existingPaths.add(standardDirs[i]);
-            }
-        }
-
-        if (existingNames.isEmpty()) {
-            Toast.makeText(this, "No accessible folders found.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String[] nameArray = existingNames.toArray(new String[0]);
-
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Choose a Folder")
-                .setItems(nameArray, (dialog, which) -> {
-                    File chosenFolder = existingPaths.get(which);
-
-                    // Check if folder has images before opening
-                    File[] images = chosenFolder.listFiles((dir, name) -> {
-                        String lower = name.toLowerCase();
-                        return lower.endsWith(".jpg") || lower.endsWith(".jpeg")
-                                || lower.endsWith(".png") || lower.endsWith(".webp");
-                    });
-
-                    int imageCount = (images == null) ? 0 : images.length;
-                    Toast.makeText(this,
-                            "Opening " + chosenFolder.getName() +
-                                    " (" + imageCount + " images found)",
-                            Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(this, GalleryActivity.class);
-                    intent.putExtra("folder_path", chosenFolder.getAbsolutePath());
-                    startActivity(intent);
-                })
-                .show();
     }
 }

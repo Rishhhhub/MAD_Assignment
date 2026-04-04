@@ -1,23 +1,23 @@
 package com.example.question_4;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private TextView tvFolderName;
+
+    // Store URI for refreshing on resume
+    private String folderUriString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,62 +27,75 @@ public class GalleryActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         tvFolderName = findViewById(R.id.tvFolderName);
 
-        // Get folder path from Intent extra
-        String folderPath = getIntent().getStringExtra("folder_path");
-        if (folderPath == null) {
-            Toast.makeText(this, "No folder path provided.", Toast.LENGTH_SHORT).show();
-            finish(); // close this activity
+        folderUriString = getIntent().getStringExtra("folder_uri");
+
+        if (folderUriString == null) {
+            Toast.makeText(this, "No folder selected.", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
-        File folder = new File(folderPath);
+
+        loadImages();
+    }
+
+    private void loadImages() {
+        Uri treeUri = Uri.parse(folderUriString);
+
+        // DocumentFile lets us read folder contents from a URI
+        DocumentFile folder = DocumentFile.fromTreeUri(this, treeUri);
+
+        if (folder == null || !folder.exists()) {
+            Toast.makeText(this, "Cannot access folder.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         tvFolderName.setText("📁 " + folder.getName());
 
-        // Load all image files from the folder
-        List<File> images = getImagesFromFolder(folder);
+        // Get all image files from the folder
+        List<Uri> imageUris = new ArrayList<>();
+        DocumentFile[] files = folder.listFiles();
 
-        if (images.isEmpty()) {
-            Toast.makeText(this, "No images found in this folder.",
+        if (files != null) {
+            for (DocumentFile file : files) {
+                if (file.isFile() && isImageFile(file.getName())) {
+                    imageUris.add(file.getUri());
+                }
+            }
+        }
+
+        if (imageUris.isEmpty()) {
+            Toast.makeText(this,
+                    "No images found in " + folder.getName(),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this,
+                    imageUris.size() + " images found",
                     Toast.LENGTH_SHORT).show();
         }
-        // GridLayoutManager: 3 columns
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        // Set adapter
-        ImageAdapter adapter = new ImageAdapter(this, images);
+        // 3 column grid
+        // 3 column grid
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        ImageAdapter adapter = new ImageAdapter(this, imageUris);
         recyclerView.setAdapter(adapter);
     }
 
-    // Filter only image files (jpg, jpeg, png, webp, gif)
-    private List<File> getImagesFromFolder(File folder) {
-        FilenameFilter imageFilter = (dir, name) -> {
-            String lower = name.toLowerCase();
-            return lower.endsWith(".jpg") || lower.endsWith(".jpeg")
-                    || lower.endsWith(".png") || lower.endsWith(".webp")
-                    || lower.endsWith(".gif");
-        };
-
-        File[] files = folder.listFiles(imageFilter);
-        if (files == null) {
-            return new ArrayList<>();
-        }
-
-        // Sort by last modified (newest first)
-        Arrays.sort(files, (a, b) -> Long.compare(b.lastModified(), a.lastModified()));
-        return new ArrayList<>(Arrays.asList(files));
+    // Check if file is an image by extension
+    private boolean isImageFile(String name) {
+        if (name == null) return false;
+        String lower = name.toLowerCase();
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg")
+                || lower.endsWith(".png") || lower.endsWith(".webp")
+                || lower.endsWith(".gif");
     }
 
-    // onResume(): reload images when returning from ImageDetailActivity
-    // (in case the user deleted an image)
+    // Refresh when returning from ImageDetailActivity
     @Override
     protected void onResume() {
         super.onResume();
-        // Re-get folder path and refresh adapter
-        String folderPath = getIntent().getStringExtra("folder_path");
-        if (folderPath != null) {
-            File folder = new File(folderPath);
-            List<File> images = getImagesFromFolder(folder);
-            ImageAdapter adapter = new ImageAdapter(this, images);
-            recyclerView.setAdapter(adapter);
+        if (folderUriString != null) {
+            loadImages();
         }
     }
 }
