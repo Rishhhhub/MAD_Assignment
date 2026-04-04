@@ -56,6 +56,18 @@ public class GalleryActivity extends AppCompatActivity {
         List<Uri> imageUris = new ArrayList<>();
         DocumentFile[] files = folder.listFiles();
 
+    // Safety limit — prevents crash with large folders
+    // Glide handles lazy loading but RecyclerView still needs a reasonable list size
+        if (files != null && files.length > 200) {
+            Toast.makeText(this,
+                    "Folder has " + files.length + " files. Showing first 200 images.",
+                    Toast.LENGTH_LONG).show();
+            // Trim to first 200
+            DocumentFile[] trimmed = new DocumentFile[200];
+            System.arraycopy(files, 0, trimmed, 0, 200);
+            files = trimmed;
+        }
+
         if (files != null) {
             for (DocumentFile file : files) {
                 if (file.isFile() && isImageFile(file.getName())) {
