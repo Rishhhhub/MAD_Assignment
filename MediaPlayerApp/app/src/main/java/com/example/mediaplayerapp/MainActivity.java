@@ -21,23 +21,22 @@ import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    // UI views
+    // linking all UI elements
     private VideoView videoView;
     private TextView tvMediaLabel;
     private Button btnOpenFile, btnOpenUrl;
     private ImageButton btnPlay, btnPause, btnStop, btnRestart;
 
-    // MediaPlayer handles audio playback
+    // used for audio
     private MediaPlayer mediaPlayer;
 
-    // Tracks whether we are in VIDEO or AUDIO mode
+    // check if current media is video or audio
     private boolean isVideoMode = false;
 
-    // Permission request code constant
+    // request code for permission
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    // ActivityResultLauncher replaces the old startActivityForResult() method
-    // This opens the file picker and gets back the selected file URI
+    // opens file picker and gets selected file
     private final ActivityResultLauncher<String> filePickerLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {
@@ -45,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
                     loadAudio(uri);
                 }
             });
+
+    // main function where everything starts
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         btnStop      = findViewById(R.id.btnStop);
         btnRestart   = findViewById(R.id.btnRestart);
 
-        // Set click listeners for all buttons
+        // button click actions
         btnOpenFile.setOnClickListener(v -> checkPermissionAndOpenFile());
         btnOpenUrl.setOnClickListener(v -> showUrlDialog());
         btnPlay.setOnClickListener(v -> playMedia());
@@ -73,14 +74,18 @@ public class MainActivity extends AppCompatActivity {
     // ── PERMISSION HANDLING ───────────────────────────────────────────────
 
     private void checkPermissionAndOpenFile() {
-        // Android 13+ uses READ_MEDIA_AUDIO instead of READ_EXTERNAL_STORAGE
-        String permission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                ? Manifest.permission.READ_MEDIA_AUDIO
-                : Manifest.permission.READ_EXTERNAL_STORAGE;
+        // Android 13+ ( from tiramisu and after) uses READ_MEDIA_AUDIO instead of READ_EXTERNAL_STORAGE
+        String permission;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permission = Manifest.permission.READ_MEDIA_AUDIO;
+        } else {
+            permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        }
 
         if (ContextCompat.checkSelfPermission(this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Permission not granted — request it
+            // ask for permission if not given
             ActivityCompat.requestPermissions(this,
                     new String[]{permission}, PERMISSION_REQUEST_CODE);
         } else {
