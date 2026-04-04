@@ -17,11 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     EditText etAmount;
     Spinner spinnerFrom, spinnerTo;
-    Button btnConvert, btnSwap, btnSettings;
+    Button btnConvert, btnSettings;
     TextView tvResult, tvRate;
 
     String[] currencies = {"INR", "USD", "JPY", "EUR"};
-    double[] ratesInINR = {1.0, 83.5, 0.55, 90.2};
+    double[] ratesInINR = {1.0, 92.74, 0.58, 107.28};
 
     SharedPreferences prefs;
 
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerFrom = findViewById(R.id.spinnerFrom);
         spinnerTo = findViewById(R.id.spinnerTo);
         btnConvert = findViewById(R.id.btnConvert);
-        btnSwap = findViewById(R.id.btnSwap);
         btnSettings = findViewById(R.id.btnSettings);
         tvResult = findViewById(R.id.tvResult);
         tvRate = findViewById(R.id.tvRate);
@@ -63,13 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Buttons
         btnConvert.setOnClickListener(v -> convertCurrency());
-
-        btnSwap.setOnClickListener(v -> {
-            int from = spinnerFrom.getSelectedItemPosition();
-            int to = spinnerTo.getSelectedItemPosition();
-            spinnerFrom.setSelection(to);
-            spinnerTo.setSelection(from);
-        });
 
         // Opens Settings page
         btnSettings.setOnClickListener(v -> {
