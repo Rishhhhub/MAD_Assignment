@@ -1,19 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#121212">
 
+    <!-- Title -->
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="MEDIA PLAYER"
+        android:textColor="#BB86FC"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:letterSpacing="0.1"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Open Buttons at the top -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp">
+
+        <Button
+            android:id="@+id/btnOpenFile"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Open File"
+            android:textColor="#BB86FC"
+            android:layout_marginEnd="12dp"/>
+
+        <Button
+            android:id="@+id/btnOpenUrl"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Open URL"
+            android:textColor="#BB86FC"/>
+    </LinearLayout>
+
+    <!-- Center Container for Video and Label -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Video Container to give it a nice look -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000">
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+        <!-- Media Label -->
+        <TextView
+            android:id="@+id/tvMediaLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No media loaded"
+            android:textColor="#AAAAAA"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+    <!-- Playback Controls at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp">
+
+        <!-- Restart -->
+        <ImageButton
+            android:id="@+id/btnRestart"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/circle_button"
+            android:contentDescription="Restart"
+            android:src="@android:drawable/ic_media_rew"
+            android:tint="#FFFFFF" />
+
+        <!-- Play -->
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="8dp"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/circle_button"
+            android:contentDescription="Play"
+            android:src="@android:drawable/ic_media_play"
+            android:tint="#BB86FC" />
+
+        <!-- Pause -->
+        <ImageButton
+            android:id="@+id/btnPause"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/circle_button"
+            android:contentDescription="Pause"
+            android:src="@android:drawable/ic_media_pause"
+            android:tint="#FFFFFF" />
+
+        <!-- Stop -->
+        <ImageButton
+            android:id="@+id/btnStop"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/circle_button"
+            android:contentDescription="Stop"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="#CF6679" />
+    </LinearLayout>
+
+</LinearLayout>
