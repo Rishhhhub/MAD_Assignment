@@ -18,6 +18,10 @@
         android:letterSpacing="0.1"
         android:gravity="center"
         android:layout_marginBottom="32dp"/>
+    <!--
+    different font used to make the title stand out
+    while sticking to the theme
+     -->
 
     <!-- Open Buttons at the top -->
     <LinearLayout
@@ -35,6 +39,9 @@
             android:text="Open File"
             android:textColor="#BB86FC"
             android:layout_marginEnd="12dp"/>
+        <!-- added margin on the end to make the app cleaner
+            and also tried using predefined material design to remove solid background from the open file button
+            -->
 
         <Button
             android:id="@+id/btnOpenUrl"
@@ -78,7 +85,11 @@
             android:layout_marginTop="16dp"/>
     </LinearLayout>
 
-    <!-- Playback Controls at the bottom -->
+    <!--
+    Playback Controls at the bottom for cleaner look
+    //earlier at the top when media frame was above the open file/url button
+    -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,7 +110,9 @@
             android:src="@android:drawable/ic_media_rew"
             android:tint="#FFFFFF" />
 
-        <!-- Play -->
+        <!--
+        Play button bigger than others to make it more visible
+        -->
         <ImageButton
             android:id="@+id/btnPlay"
             android:layout_width="80dp"
@@ -125,7 +138,8 @@
             android:src="@android:drawable/ic_media_pause"
             android:tint="#FFFFFF" />
 
-        <!-- Stop -->
+        <!--
+        Stop button with red color tint for it to stand out-->
         <ImageButton
             android:id="@+id/btnStop"
             android:layout_width="56dp"
