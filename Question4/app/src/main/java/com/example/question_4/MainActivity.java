@@ -32,6 +32,39 @@ public class MainActivity extends AppCompatActivity {
     // Stores the file path where the camera will save the photo
     private String currentPhotoPath;
 
+    private final ActivityResultLauncher<Intent> folderPickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri treeUri = result.getData().getData();
+
+                    // Convert the content URI to a real file path
+                    String path = getRealPathFromUri(treeUri);
+
+                    if (path != null) {
+                        // Check how many images are in this folder
+                        File folder = new File(path);
+                        File[] images = folder.listFiles((dir, name) -> {
+                            String lower = name.toLowerCase();
+                            return lower.endsWith(".jpg") || lower.endsWith(".jpeg")
+                                    || lower.endsWith(".png") || lower.endsWith(".webp");
+                        });
+
+                        int count = (images == null) ? 0 : images.length;
+                        Toast.makeText(this,
+                                folder.getName() + ": " + count + " images found",
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(this, GalleryActivity.class);
+                        intent.putExtra("folder_path", path);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this,
+                                "Could not read this folder. Try a different one.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
     // Launcher for taking a photo with the camera
     private final ActivityResultLauncher<Uri> cameraLauncher =
             registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
