@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1117">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Title -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LIVE \n Sensor Data"
+            android:textColor="#8a00c2"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Accelerometer -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Accelerometer"
+            android:textColor="#01796F"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView android:id="@+id/tvAccelerometer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="X: -- Y: -- Z: --"
+            android:textColor="#C9D1D9"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:background="#161b22"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Light Sensor -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Light Sensor"
+            android:textColor="#FFCE1B"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView android:id="@+id/tvLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-- lux"
+            android:textColor="#C9D1D9"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:background="#161b22"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Proximity-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Proximity"
+            android:textColor="#FA003f"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView android:id="@+id/tvProximity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-- cm"
+            android:textColor="#C9D1D9"
+            android:textSize="15sp"
+            android:fontFamily="monospace"
+            android:background="#161b22"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Status message -->
+        <TextView android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Initializing Sensors"
+            android:textColor="#C9D1D9"
+            android:textSize="19sp"
+            android:gravity="center"/>
+    </LinearLayout>
+</ScrollView>
