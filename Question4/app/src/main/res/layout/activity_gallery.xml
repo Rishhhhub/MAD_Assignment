@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
-        android:id="@+id/tvFolderName"
+    android:orientation="vertical"
+    android:background="#FDFBF7">
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gallery"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:padding="16dp"
-        android:background="#F5F5F5"/>
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#F7F3E8"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvFolderName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gallery"
+            android:fontFamily="serif"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#4A3B32"
+            android:padding="20dp" />
+    </androidx.cardview.widget.CardView>
+
 
     <!-- RecyclerView displays a scrollable grid of images -->
     <androidx.recyclerview.widget.RecyclerView

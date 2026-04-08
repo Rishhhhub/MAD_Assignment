@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FDFBF7">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -9,81 +11,115 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Full image view -->
-        <ImageView
-            android:id="@+id/ivFullImage"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:scaleType="fitCenter"
-            android:layout_marginBottom="16dp"
-            android:contentDescription="Full image"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#F7F3E8"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
 
-        <!-- Image name -->
-        <TextView android:id="@+id/tvImageName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            <ImageView
+                android:id="@+id/ivFullImage"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:layout_margin="8dp"
+                android:background="#EAE4D3"
+                android:contentDescription="Full image"
+                android:scaleType="fitCenter" />
+        </androidx.cardview.widget.CardView>
 
-        <!-- Image path -->
-        <TextView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Path:"
-            android:textStyle="bold"
-            android:textSize="14sp"/>
-        <TextView android:id="@+id/tvImagePath"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#555555"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#F7F3E8"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
 
-        <!-- Image size -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Size:"
-            android:textStyle="bold"
-            android:textSize="14sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-        <TextView android:id="@+id/tvImageSize"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#555555"
-            android:layout_marginBottom="8dp"/>
-        <!-- Date taken -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date Taken:"
-            android:textStyle="bold"
-            android:textSize="14sp"/>
+                <TextView
+                    android:id="@+id/tvImageName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="serif"
+                    android:textColor="#4A3B32"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
-        <TextView android:id="@+id/tvImageDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#555555"
-            android:layout_marginBottom="24dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="Path:"
+                    android:textColor="#4A3B32"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-        <!-- Delete Button -->
-        <Button
+                <TextView
+                    android:id="@+id/tvImagePath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:fontFamily="serif"
+                    android:textColor="#7D6B5D"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="Size"
+                    android:textColor="#4A3B32"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvImageSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:fontFamily="serif"
+                    android:textColor="#7D6B5D"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="Date Taken"
+                    android:textColor="#4A3B32"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvImageDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:textColor="#7D6B5D"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="64dp"
+            android:backgroundTint="#C84C3C"
+            android:fontFamily="serif"
             android:text="🗑  Delete Image"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:backgroundTint="#D32F2F"
-            android:textColor="#FFFFFF"/>
+            android:textStyle="bold"
+            app:cornerRadius="32dp" />
 
     </LinearLayout>
 </ScrollView>
-
-
-
-
-
-

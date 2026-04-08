@@ -1,39 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="32dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="#FDFBF7">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="📷 Photo Gallery"
-        android:textSize="30sp"
+        android:text="Photo Gallery \n 📷"
+        android:textAlignment="center"
+        android:textSize="32sp"
         android:textStyle="bold"
+        android:textColor="#4A3B32"
         android:layout_marginBottom="12dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Take photos or browse your device"
-        android:textSize="15sp"
-        android:textColor="#666666"
-        android:layout_marginBottom="48dp"/>
+        android:fontFamily="serif"
+        android:textSize="16sp"
+        android:textColor="#7D6B5D"
+        android:layout_marginBottom="48dp"
+        android:textAlignment="center"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnTakePhoto"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="64dp"
         android:text="📷  Take Photo"
         android:textSize="18sp"
+        android:textStyle="bold"
+        app:cornerRadius="32dp"
+        android:textColor="#4A3B32"
+        android:backgroundTint="#FFC107"
         android:layout_marginBottom="16dp"/>
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBrowseFolder"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="64dp"
         android:text="🗂  Browse Folder"
-        android:textSize="18sp"/>
+        android:fontFamily="serif"
+        android:textSize="18sp"
+        app:cornerRadius="32dp"
+        android:textColor="#4A3B32"
+        android:backgroundTint="#FFC107"/>
 
 </LinearLayout>
-
